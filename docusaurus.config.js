@@ -6,8 +6,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const path = require("path");
 
 const languageServerTypesEsm = path.join(
-  path.dirname(require.resolve("vscode-languageserver-types")),
-  "../esm/main.js"
+	path.dirname(require.resolve("vscode-languageserver-types")),
+	"../esm/main.js",
 );
 
 // Import constants from central location
@@ -15,191 +15,195 @@ const { HANDBOOK_URL } = require("./src/constants.js");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Compass Docs",
-  tagline: "Compass is the daily planner for minimalists. Explore the docs to understand how it works.",
-  favicon: "img/favicon.ico",
-  url: "https://docs.compasscalendar.com",
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/",
+	title: "Compass Docs",
+	tagline:
+		"Compass is the daily planner for minimalists. Explore the docs to understand how it works.",
+	favicon: "img/favicon.ico",
+	url: "https://docs.compasscalendar.com",
+	// Set the /<baseUrl>/ pathname under which your site is served
+	// For GitHub pages deployment, it is often '/<projectName>/'
+	baseUrl: "/",
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: "switchback", // Usually your GitHub org/user name.
-  projectName: "compass-docs",
+	// GitHub pages deployment config.
+	// If you aren't using GitHub pages, you don't need these.
+	organizationName: "switchback", // Usually your GitHub org/user name.
+	projectName: "compass-docs",
 
-  onBrokenLinks: "warn",
+	onBrokenLinks: "warn",
 
-  markdown: {
-    format: 'md',
-    mermaid: true,
-    hooks: {
-      onBrokenMarkdownLinks: "warn",
-    },
-  },
+	markdown: {
+		format: "md",
+		mermaid: true,
+		hooks: {
+			onBrokenMarkdownLinks: "warn",
+		},
+	},
 
-  plugins: [
-    [
-      "@docusaurus/plugin-client-redirects",
-      {
-        redirects: [
-          {
-            from: "/blog/about",
-            to: "https://www.compasscalendar.com/blog/about",
-          },
-        ],
-      },
-    ],
-    function useEsmLanguageServerTypes() {
-      return {
-        name: "use-esm-language-server-types",
-        configureWebpack() {
-          return {
-            resolve: {
-              alias: {
-                // Mermaid pulls this through Langium. The package's default
-                // export is UMD, so prefer its ESM build when webpack bundles it.
-                "vscode-languageserver-types$": languageServerTypesEsm,
-              },
-            },
-          };
-        },
-      };
-    },
-  ],
+	plugins: [
+		[
+			"@docusaurus/plugin-client-redirects",
+			{
+				redirects: [
+					{
+						from: "/blog/about",
+						to: "https://www.compasscalendar.com/blog/about",
+					},
+				],
+			},
+		],
+		function useEsmLanguageServerTypes() {
+			return {
+				name: "use-esm-language-server-types",
+				configureWebpack() {
+					return {
+						resolve: {
+							alias: {
+								// Mermaid pulls this through Langium. The package's default
+								// export is UMD, so prefer its ESM build when webpack bundles it.
+								"vscode-languageserver-types$": languageServerTypesEsm,
+							},
+						},
+					};
+				},
+			};
+		},
+	],
 
-  themes: ["@docusaurus/theme-mermaid"],
+	themes: ["@docusaurus/theme-mermaid"],
 
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en"],
-  },
+	// Even if you don't use internalization, you can use this field to set useful
+	// metadata like html lang. For example, if your site is Chinese, you may want
+	// to replace "en" with "zh-Hans".
+	i18n: {
+		defaultLocale: "en",
+		locales: ["en"],
+	},
 
-  presets: [
-    [
-      "classic",
-      /** @type {import('@docusaurus/preset-classic').Options} */
-      ({
-        docs: {
-          sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/SwitchbackTech/compass/tree/main",
-          async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
-            const items = await defaultSidebarItemsGenerator(args);
-            const capitalize = (label) =>
-              label.charAt(0).toUpperCase() + label.slice(1);
-            const applyToItems = (items) =>
-              items.map((item) => {
-                if (item.type === "category") {
-                  return {
-                    ...item,
-                    label: capitalize(item.label),
-                    items: applyToItems(item.items ?? []),
-                  };
-                }
-                return item;
-              });
-            return applyToItems(items);
-          },
-        },
-        blog: {
-          showReadingTime: true,
-          // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/SwitchbackTech/compass-docs/tree/main",
-        },
-        theme: {
-          customCss: require.resolve("./src/css/custom.css"),
-        },
-      }),
-    ],
-  ],
+	presets: [
+		[
+			"classic",
+			/** @type {import('@docusaurus/preset-classic').Options} */
+			({
+				docs: {
+					sidebarPath: require.resolve("./sidebars.js"),
+					editUrl: "https://github.com/SwitchbackTech/compass/tree/main",
+					async sidebarItemsGenerator({
+						defaultSidebarItemsGenerator,
+						...args
+					}) {
+						const items = await defaultSidebarItemsGenerator(args);
+						const capitalize = (label) =>
+							label.charAt(0).toUpperCase() + label.slice(1);
+						const applyToItems = (items) =>
+							items.map((item) => {
+								if (item.type === "category") {
+									return {
+										...item,
+										label: capitalize(item.label),
+										items: applyToItems(item.items ?? []),
+									};
+								}
+								return item;
+							});
+						return applyToItems(items);
+					},
+				},
+				blog: {
+					showReadingTime: true,
+					// Remove this to remove the "edit this page" links.
+					editUrl: "https://github.com/SwitchbackTech/compass-docs/tree/main",
+				},
+				theme: {
+					customCss: require.resolve("./src/css/custom.css"),
+				},
+			}),
+		],
+	],
 
-  themeConfig:
-    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
-      image: "img/social_card.jpg",
+	themeConfig:
+		/** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+		({
+			image: "img/social_card.jpg",
 
-      algolia: {
-        appId: "8X35L27KEK",
-        apiKey: "9b2c833c8deea66a67ffb1277c58abe2",
-        indexName: "Compass Docs Crawler",
-      },
-      navbar: {
-        title: "Compass Docs",
-        logo: {
-          alt: "Compass Docs Logo",
-          src: "img/logo.svg",
-        },
-        items: [
-          {
-            type: "docSidebar",
-            sidebarId: "tutorialSidebar",
-            position: "left",
-            label: "Docs",
-          },
-        ],
-      },
-      footer: {
-        style: "dark",
-        links: [
-          {
-            title: "Repos",
-            items: [
-              {
-                label: "Compass",
-                href: "https://github.com/SwitchbackTech/compass",
-              },
-              {
-                label: "Doc Site (this one)",
-                href: "https://github.com/SwitchbackTech/compass-docs",
-              },
-            ],
-          },
-          {
-            title: "More",
-            items: [
-              {
-                label: "Production App",
-                href: "https://app.compasscalendar.com?utm_source=docsite&utm_medium=footer",
-              },
-              {
-                label: "Handbook",
-                href: HANDBOOK_URL,
-              },
-              {
-                label: "Blog",
-                href: "https://www.compasscalendar.com/blog?utm_source=docsite&utm_medium=footer",
-              },
-            ],
-          },
-          {
-            title: "Social",
-            items: [
-              {
-                label: "Discussions",
-                href: "https://github.com/SwitchbackTech/compass/discussions",
-              },
-              {
-                label: "LinkedIn",
-                href: "https://www.linkedin.com/company/compass-calendar/",
-              },
-              {
-                label: "X",
-                href: "https://x.com/CompassCalendar",
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} Switchback Tech LLC`,
-      },
-      prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
-        additionalLanguages: ["bash"],
-      },
-    }),
+			algolia: {
+				appId: "8X35L27KEK",
+				apiKey: "9b2c833c8deea66a67ffb1277c58abe2",
+				indexName: "Compass Docs Crawler",
+			},
+			navbar: {
+				title: "Compass Docs",
+				logo: {
+					alt: "Compass Docs Logo",
+					src: "img/logo.svg",
+				},
+				items: [
+					{
+						type: "docSidebar",
+						sidebarId: "tutorialSidebar",
+						position: "left",
+						label: "Docs",
+					},
+				],
+			},
+			footer: {
+				style: "dark",
+				links: [
+					{
+						title: "Repos",
+						items: [
+							{
+								label: "Compass",
+								href: "https://github.com/SwitchbackTech/compass",
+							},
+							{
+								label: "Doc Site (this one)",
+								href: "https://github.com/SwitchbackTech/compass-docs",
+							},
+						],
+					},
+					{
+						title: "More",
+						items: [
+							{
+								label: "Production App",
+								href: "https://compasscalendar.com?utm_source=docsite&utm_medium=footer",
+							},
+							{
+								label: "Handbook",
+								href: HANDBOOK_URL,
+							},
+							{
+								label: "Blog",
+								href: "https://www.compasscalendar.com/blog?utm_source=docsite&utm_medium=footer",
+							},
+						],
+					},
+					{
+						title: "Social",
+						items: [
+							{
+								label: "Discussions",
+								href: "https://github.com/SwitchbackTech/compass/discussions",
+							},
+							{
+								label: "LinkedIn",
+								href: "https://www.linkedin.com/company/compass-calendar/",
+							},
+							{
+								label: "X",
+								href: "https://x.com/CompassCalendar",
+							},
+						],
+					},
+				],
+				copyright: `Copyright © ${new Date().getFullYear()} Switchback Tech LLC`,
+			},
+			prism: {
+				theme: lightCodeTheme,
+				darkTheme: darkCodeTheme,
+				additionalLanguages: ["bash"],
+			},
+		}),
 };
 
 module.exports = config;
